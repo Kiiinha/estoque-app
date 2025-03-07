@@ -1,0 +1,507 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Controle de Estoque</title>
+  <!-- Adiciona o favicon -->
+  <link rel="icon" type="image/png" href="icon.png">
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      margin: 20px;
+      transition: background-color 0.3s, color 0.3s;
+    }
+
+    /* Modo Claro */
+    body.light-mode {
+      background-color: #ffffff;
+      color: #000000;
+    }
+
+    /* Modo Escuro */
+    body.dark-mode {
+      background-color: #121212;
+      color: #ffffff;
+    }
+
+    /* Estilo para o cabeçalho com logo */
+    .header-container {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 30px;
+    }
+
+    .logo {
+      width: 150px; /* Ajuste o tamanho conforme necessário */
+      height: auto;
+      margin-right: 20px;
+    }
+
+    h1 {
+      margin: 0;
+      font-size: 24px;
+    }
+
+    .mode-toggle {
+      padding: 10px 20px;
+      background-color: #007bff;
+      color: white;
+      border: none;
+      cursor: pointer;
+      border-radius: 5px;
+    }
+
+    .mode-toggle:hover {
+      background-color: #0056b3;
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      margin-top: 20px;
+    }
+
+    table, th, td {
+      border: 1px solid #ddd;
+    }
+
+    th, td {
+      padding: 8px;
+      text-align: left;
+    }
+
+    th {
+      background-color: #f4f4f4;
+    }
+
+    .form-container {
+      margin-bottom: 20px;
+    }
+
+    .form-container input, .form-container select, .form-container button {
+      margin: 5px 0;
+      padding: 8px;
+      width: 100%;
+      max-width: 300px;
+    }
+
+    .export-btn {
+      margin-top: 20px;
+      padding: 10px 20px;
+      background-color: #28a745;
+      color: white;
+      border: none;
+      cursor: pointer;
+    }
+
+    .export-btn:hover {
+      background-color: #218838;
+    }
+
+    .btn-editar {
+      background-color: #007bff;
+      color: white;
+      border: none;
+      padding: 5px 10px;
+      cursor: pointer;
+    }
+
+    .btn-editar:hover {
+      background-color: #0056b3;
+    }
+
+    .btn-excluir {
+      background-color: #dc3545;
+      color: white;
+      border: none;
+      padding: 5px 10px;
+      cursor: pointer;
+    }
+
+    .btn-excluir:hover {
+      background-color: #a71d2a;
+    }
+  </style>
+</head>
+<body class="light-mode">
+  <!-- Cabeçalho com Logo e Título -->
+  <div class="header-container">
+    <img src="logo_lufne.png" alt="Logo da Empresa" class="logo">
+    <h1>Controle de Estoque</h1>
+    <button class="mode-toggle" onclick="toggleMode()">Modo Escuro</button>
+  </div>
+
+  <div class="form-container">
+    <h2>Adicionar/Editar Material</h2>
+    <input type="text" id="nome" placeholder="Nome do Material" required>
+    <select id="toque" required>
+      <option value="" disabled selected>Selecione o Tipo de Toque</option>
+      <option value="28">28</option>
+      <option value="32">32</option>
+      <option value="35">35</option>
+      <option value="38">38</option>
+    </select>
+    <select id="metragem" required>
+      <option value="" disabled selected>Selecione a Metragem</option>
+      <option value="20">20 m</option>
+      <option value="50">50 m</option>
+      <option value="70">70 m</option>
+      <option value="100">100 m</option>
+      <option value="120">120 m</option>
+      <option value="150">150 m</option>
+      <option value="Outro">Outro (Personalizado)</option>
+    </select>
+    <input type="number" id="metragemPersonalizada" placeholder="Metragem Personalizada (se 'Outro')" style="display: none;">
+    <select id="cor" required>
+      <option value="" disabled selected>Selecione a Cor</option>
+      <option value="Cristal">Cristal</option>
+      <option value="Sarja">Sarja</option>
+      <option value="Branco">Branco</option>
+      <option value="Preto">Preto</option>
+      <option value="Azul">Azul</option>
+      <option value="Verde">Verde</option>
+      <option value="Outro">Outro (Personalizado)</option>
+    </select>
+    <input type="text" id="corPersonalizada" placeholder="Cor Personalizada (se 'Outro')" style="display: none;">
+    <select id="espessura" required>
+      <option value="" disabled selected>Selecione a Espessura</option>
+      <option value="0.10">0.10 mm</option>
+      <option value="0.15">0.15 mm</option>
+      <option value="0.20">0.20 mm</option>
+      <option value="0.30">0.30 mm</option>
+      <option value="Outro">Outro (Personalizado)</option>
+    </select>
+    <input type="number" id="espessuraPersonalizada" placeholder="Espessura Personalizada (se 'Outro')" style="display: none;">
+    <input type="number" id="quantidade" placeholder="Quantidade (1-250)" min="1" max="250" required>
+    <select id="localizacao" required>
+      <option value="" disabled selected>Selecione a Localização</option>
+      <option value="Parede Branca">Parede Branca</option>
+      <option value="Parede Vermelha">Parede Vermelha</option>
+      <option value="Fundo">Fundo</option>
+      <option value="Entrada">Entrada</option>
+      <option value="Outro">Outro (Personalizado)</option>
+    </select>
+    <input type="text" id="localizacaoPersonalizada" placeholder="Localização Personalizada (se 'Outro')" style="display: none;">
+    <button id="btnSalvar">Adicionar Material</button>
+  </div>
+
+  <h2>Histórico de Edições</h2>
+  <table id="tabela-historico">
+    <thead>
+      <tr>
+        <th>Material</th>
+        <th>Quantidade Anterior</th>
+        <th>Nova Quantidade</th>
+        <th>Finalidade</th>
+        <th>Data</th>
+      </tr>
+    </thead>
+    <tbody>
+    </tbody>
+  </table>
+
+  <h2>Lista de Materiais</h2>
+  <table id="tabela-materiais">
+    <thead>
+      <tr>
+        <th>Nome</th>
+        <th>Toque</th>
+        <th>Metragem (m)</th>
+        <th>Cor</th>
+        <th>Espessura</th>
+        <th>Quantidade</th>
+        <th>Total Metragem (m)</th>
+        <th>Localização</th>
+        <th>Ações</th>
+      </tr>
+    </thead>
+    <tbody>
+    </tbody>
+  </table>
+
+  <div>
+    <button class="export-btn" onclick="exportarTXT()">Exportar como TXT</button>
+    <button class="export-btn" onclick="exportarXLSX()">Exportar como XLSX</button>
+    <button class="export-btn" onclick="exportarImagem()">Exportar como Imagem</button>
+  </div>
+
+  <!-- Inclui bibliotecas externas -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+  <script>
+    let materiais = JSON.parse(localStorage.getItem('materiais')) || [];
+    let historico = JSON.parse(localStorage.getItem('historico')) || [];
+    let indiceEdicao = null;
+
+    // Função para alternar entre modo claro e escuro
+    function toggleMode() {
+      const body = document.body;
+      if (body.classList.contains('light-mode')) {
+        body.classList.remove('light-mode');
+        body.classList.add('dark-mode');
+        document.querySelector('.mode-toggle').innerText = 'Modo Claro';
+      } else {
+        body.classList.remove('dark-mode');
+        body.classList.add('light-mode');
+        document.querySelector('.mode-toggle').innerText = 'Modo Escuro';
+      }
+    }
+
+    // Função para atualizar a tabela de materiais
+    function atualizarTabela() {
+      const tbody = document.querySelector('#tabela-materiais tbody');
+      tbody.innerHTML = '';
+
+      materiais.forEach((material, index) => {
+        const row = document.createElement('tr');
+        row.innerHTML = `
+          <td>${material.nome}</td>
+          <td>${material.toque}</td>
+          <td>${material.metragem} m</td>
+          <td>${material.cor}</td>
+          <td>${material.espessura} mm</td>
+          <td>${material.quantidade}</td>
+          <td>${material.totalMetragem} m</td>
+          <td>${material.localizacao}</td>
+          <td>
+            <button class="btn-editar" onclick="editarMaterial(${index})">Editar</button>
+            <button class="btn-excluir" onclick="excluirMaterial(${index})">Excluir</button>
+          </td>
+        `;
+        tbody.appendChild(row);
+      });
+
+      // Salva os materiais no localStorage
+      localStorage.setItem('materiais', JSON.stringify(materiais));
+    }
+
+    // Função para atualizar a tabela de histórico
+    function atualizarHistorico() {
+      const tbody = document.querySelector('#tabela-historico tbody');
+      tbody.innerHTML = '';
+
+      historico.forEach((registro) => {
+        const row = document.createElement('tr');
+        row.innerHTML = `
+          <td>${registro.material}</td>
+          <td>${registro.quantidadeAnterior}</td>
+          <td>${registro.novaQuantidade}</td>
+          <td>${registro.finalidade}</td>
+          <td>${registro.data}</td>
+        `;
+        tbody.appendChild(row);
+      });
+
+      // Salva o histórico no localStorage
+      localStorage.setItem('historico', JSON.stringify(historico));
+    }
+
+    // Função para adicionar ou editar material
+    function adicionarOuEditarMaterial() {
+      const nome = document.getElementById('nome').value;
+      const toque = document.getElementById('toque').value;
+      const metragem = document.getElementById('metragem').value === 'Outro'
+        ? parseFloat(document.getElementById('metragemPersonalizada').value)
+        : parseFloat(document.getElementById('metragem').value);
+      const cor = document.getElementById('cor').value === 'Outro'
+        ? document.getElementById('corPersonalizada').value
+        : document.getElementById('cor').value;
+      const espessura = document.getElementById('espessura').value === 'Outro'
+        ? parseFloat(document.getElementById('espessuraPersonalizada').value)
+        : parseFloat(document.getElementById('espessura').value);
+      const quantidade = parseInt(document.getElementById('quantidade').value);
+      const localizacao = document.getElementById('localizacao').value === 'Outro'
+        ? document.getElementById('localizacaoPersonalizada').value
+        : document.getElementById('localizacao').value;
+
+      if (!nome || !toque || isNaN(metragem) || !cor || isNaN(espessura) || isNaN(quantidade) || !localizacao) {
+        alert('Preencha todos os campos corretamente!');
+        return;
+      }
+
+      const totalMetragem = metragem * quantidade;
+      const material = { nome, toque, metragem, cor, espessura, quantidade, totalMetragem, localizacao };
+
+      if (indiceEdicao !== null) {
+        // Registra a edição no histórico
+        const materialAntigo = materiais[indiceEdicao];
+        historico.push({
+          material: materialAntigo.nome,
+          quantidadeAnterior: materialAntigo.quantidade,
+          novaQuantidade: quantidade,
+          finalidade: prompt("Qual a finalidade dessa edição?"),
+          data: new Date().toLocaleString()
+        });
+
+        // Atualiza o material existente
+        materiais[indiceEdicao] = material;
+        indiceEdicao = null;
+        document.getElementById('btnSalvar').innerText = 'Adicionar Material';
+      } else {
+        // Adiciona um novo material
+        materiais.push(material);
+      }
+
+      atualizarTabela();
+      atualizarHistorico();
+      limparFormulario();
+    }
+
+    // Função para editar material
+    function editarMaterial(index) {
+      const material = materiais[index];
+      document.getElementById('nome').value = material.nome;
+      document.getElementById('toque').value = material.toque;
+
+      const metragemSelect = document.getElementById('metragem');
+      if ([20, 50, 70, 100, 120, 150].includes(material.metragem)) {
+        metragemSelect.value = material.metragem;
+        document.getElementById('metragemPersonalizada').style.display = 'none';
+      } else {
+        metragemSelect.value = 'Outro';
+        document.getElementById('metragemPersonalizada').style.display = 'block';
+        document.getElementById('metragemPersonalizada').value = material.metragem;
+      }
+
+      const corSelect = document.getElementById('cor');
+      if (['Cristal', 'Sarja', 'Branco', 'Preto', 'Azul', 'Verde'].includes(material.cor)) {
+        corSelect.value = material.cor;
+        document.getElementById('corPersonalizada').style.display = 'none';
+      } else {
+        corSelect.value = 'Outro';
+        document.getElementById('corPersonalizada').style.display = 'block';
+        document.getElementById('corPersonalizada').value = material.cor;
+      }
+
+      const espessuraSelect = document.getElementById('espessura');
+      if ([0.10, 0.15, 0.20, 0.30].includes(material.espessura)) {
+        espessuraSelect.value = material.espessura;
+        document.getElementById('espessuraPersonalizada').style.display = 'none';
+      } else {
+        espessuraSelect.value = 'Outro';
+        document.getElementById('espessuraPersonalizada').style.display = 'block';
+        document.getElementById('espessuraPersonalizada').value = material.espessura;
+      }
+
+      document.getElementById('quantidade').value = material.quantidade;
+
+      const localizacaoSelect = document.getElementById('localizacao');
+      if (['Parede Branca', 'Parede Vermelha', 'Fundo', 'Entrada'].includes(material.localizacao)) {
+        localizacaoSelect.value = material.localizacao;
+        document.getElementById('localizacaoPersonalizada').style.display = 'none';
+      } else {
+        localizacaoSelect.value = 'Outro';
+        document.getElementById('localizacaoPersonalizada').style.display = 'block';
+        document.getElementById('localizacaoPersonalizada').value = material.localizacao;
+      }
+
+      indiceEdicao = index;
+      document.getElementById('btnSalvar').innerText = 'Salvar Alterações';
+    }
+
+    // Função para excluir material
+    function excluirMaterial(index) {
+      materiais.splice(index, 1);
+      atualizarTabela();
+    }
+
+    // Função para limpar o formulário
+    function limparFormulario() {
+      document.getElementById('nome').value = '';
+      document.getElementById('toque').value = '';
+      document.getElementById('metragem').value = '';
+      document.getElementById('metragemPersonalizada').value = '';
+      document.getElementById('cor').value = '';
+      document.getElementById('corPersonalizada').value = '';
+      document.getElementById('espessura').value = '';
+      document.getElementById('espessuraPersonalizada').value = '';
+      document.getElementById('quantidade').value = '';
+      document.getElementById('localizacao').value = '';
+      document.getElementById('localizacaoPersonalizada').value = '';
+      document.getElementById('metragemPersonalizada').style.display = 'none';
+      document.getElementById('corPersonalizada').style.display = 'none';
+      document.getElementById('espessuraPersonalizada').style.display = 'none';
+      document.getElementById('localizacaoPersonalizada').style.display = 'none';
+    }
+
+    // Função para exportar como TXT
+    function exportarTXT() {
+      let texto = "Lista de Materiais:\n\n";
+      materiais.forEach((material) => {
+        texto += `Nome: ${material.nome}\n`;
+        texto += `Toque: ${material.toque}\n`;
+        texto += `Metragem: ${material.metragem} m\n`;
+        texto += `Cor: ${material.cor}\n`;
+        texto += `Espessura: ${material.espessura} mm\n`;
+        texto += `Quantidade: ${material.quantidade}\n`;
+        texto += `Total Metragem: ${material.totalMetragem} m\n`;
+        texto += `Localização: ${material.localizacao}\n`;
+        texto += "-----------------------------------\n";
+      });
+
+      const blob = new Blob([texto], { type: 'text/plain' });
+      const link = document.createElement('a');
+      link.href = URL.createObjectURL(blob);
+      link.download = 'lista_materiais.txt';
+      link.click();
+    }
+
+    // Função para exportar como XLSX
+    function exportarXLSX() {
+      const worksheetData = [
+        ['Nome', 'Toque', 'Metragem (m)', 'Cor', 'Espessura (mm)', 'Quantidade', 'Total Metragem (m)', 'Localização']
+      ];
+
+      materiais.forEach((material) => {
+        worksheetData.push([
+          material.nome,
+          material.toque,
+          material.metragem,
+          material.cor,
+          material.espessura,
+          material.quantidade,
+          material.totalMetragem,
+          material.localizacao
+        ]);
+      });
+
+      const worksheet = XLSX.utils.aoa_to_sheet(worksheetData);
+      const workbook = XLSX.utils.book_new();
+      XLSX.utils.book_append_sheet(workbook, worksheet, 'Materiais');
+      XLSX.writeFile(workbook, 'lista_materiais.xlsx');
+    }
+
+    // Função para exportar como Imagem
+    function exportarImagem() {
+      const tabela = document.getElementById('tabela-materiais');
+      html2canvas(tabela).then(canvas => {
+        const link = document.createElement('a');
+        link.href = canvas.toDataURL('image/png');
+        link.download = 'lista_materiais.png';
+        link.click();
+      });
+    }
+
+    // Evento para alternar entre valores predefinidos e personalizados
+    document.querySelectorAll('#metragem, #cor, #espessura, #localizacao').forEach((select) => {
+      select.addEventListener('change', function () {
+        const campoPersonalizado = document.getElementById(`${this.id}Personalizada`);
+        if (this.value === 'Outro') {
+          campoPersonalizado.style.display = 'block';
+        } else {
+          campoPersonalizado.style.display = 'none';
+        }
+      });
+    });
+
+    // Evento para salvar ou editar material
+    document.getElementById('btnSalvar').addEventListener('click', adicionarOuEditarMaterial);
+
+    // Carrega os materiais e o histórico salvos ao iniciar
+    atualizarTabela();
+    atualizarHistorico();
+  </script>
+</body>
+</html>
