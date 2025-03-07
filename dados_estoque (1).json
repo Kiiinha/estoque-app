@@ -1,0 +1,75 @@
+{
+  "materiais": [
+    {
+      "nome": "PVC CRISTAL FLC",
+      "toque": "35",
+      "metragem": 70,
+      "cor": "Cristal",
+      "espessura": 0.3,
+      "quantidade": 17,
+      "totalMetragem": 1190,
+      "localizacao": "Fundo"
+    },
+    {
+      "nome": "PVC CRISTAL FLC",
+      "toque": "35",
+      "metragem": 100,
+      "cor": "Cristal",
+      "espessura": 0.15,
+      "quantidade": 23,
+      "totalMetragem": 2300,
+      "localizacao": "Fundo"
+    },
+    {
+      "nome": "PVC CRISTAL FLC",
+      "toque": "35",
+      "metragem": 100,
+      "cor": "Cristal",
+      "espessura": 0.2,
+      "quantidade": 41,
+      "totalMetragem": 4100,
+      "localizacao": "Parede Vermelha"
+    },
+    {
+      "nome": "PVC CRISTAL FLC",
+      "toque": "28",
+      "metragem": 100,
+      "cor": "Cristal",
+      "espessura": 0.15,
+      "quantidade": 3,
+      "totalMetragem": 300,
+      "localizacao": "Parede Branca"
+    },
+    {
+      "nome": "PVC CRISTAL FLC",
+      "toque": "28",
+      "metragem": 100,
+      "cor": "Cristal",
+      "espessura": 0.2,
+      "quantidade": 6,
+      "totalMetragem": 600,
+      "localizacao": "Parede Branca"
+    },
+    {
+      "nome": "PVC BRL FLC",
+      "toque": "38",
+      "metragem": 70,
+      "cor": "Branco",
+      "espessura": 0.2,
+      "quantidade": 8,
+      "totalMetragem": 560,
+      "localizacao": "Parede Branca"
+    },
+    {
+      "nome": "PVC CRISTAL IMPORTADO",
+      "toque": "28",
+      "metragem": 100,
+      "cor": "Cristal",
+      "espessura": 0.15,
+      "quantidade": 282,
+      "totalMetragem": 28200,
+      "localizacao": "Parede Branca / Vermelha"
+    }
+  ],
+  "historico": []
+}
